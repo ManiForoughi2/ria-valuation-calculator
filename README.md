@@ -25,10 +25,21 @@ the numbers and the page updates, no other edits needed.
 
 - `baseMultiple` — the starting revenue multiple (2.7×).
 - `recurring`, `clientSize`, `fee`, `scale` — four adjustment tables. Each is a list
-  of `[threshold, adjustment]` read top to bottom, first match wins. Positive numbers
-  add to the multiple, negative subtract.
-- `floor` / `cap` — the multiple is clamped to this range.
+  of `[set point, adjustment]`, highest first. Positive numbers add to the multiple,
+  negative subtract. Add or remove set points freely; more points shapes the curve
+  more precisely.
+- `floor` / `cap` — the multiple is clamped to this range. If the adjustments push
+  past a limit, the page says so rather than showing a factor list that doesn't add up.
 - `rangeSpread` — the ± band around the point estimate.
+
+Two behaviors worth knowing, because they are what make the output defensible:
+
+- **Adjustments blend between set points.** A firm at 87% recurring lands between the
+  80% and 90% marks. Nothing jumps at a threshold, so nudging a slider one notch never
+  swings the valuation by a million dollars.
+- **A blank field scores neutral, never a penalty.** Leaving out household count simply
+  drops that driver to 0.00 and says so on the page, instead of quietly scoring the firm
+  as if it had the smallest clients possible.
 
 This is where Booth's own valuation analytics plug in.
 

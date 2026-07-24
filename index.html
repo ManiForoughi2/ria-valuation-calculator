@@ -96,6 +96,7 @@
   input.has-prefix { padding-left: 28px; }
   input.has-suffix { padding-right: 34px; }
   input:focus { border-color: var(--blue-lt); box-shadow: 0 0 0 3px rgba(79,149,218,.18); background: #fff; }
+  input.flag { border-color: var(--warm); box-shadow: 0 0 0 3px rgba(199,123,48,.14); }
 
   /* Slider */
   .rangerow { display: flex; align-items: center; gap: 14px; }
@@ -114,15 +115,22 @@
   .hero .rng { color: var(--ink-2); font-size: 15px; }
   .hero .rng b { color: var(--ink); }
 
-  /* Range bar */
-  .rangebar { margin: 20px 4px 6px; }
-  .rangebar .track { position: relative; height: 10px; border-radius: 6px; background: linear-gradient(90deg, var(--blue-pale), var(--blue-lt), var(--blue)); }
-  .rangebar .mid { position: absolute; top: -5px; width: 4px; height: 20px; border-radius: 2px; background: var(--navy); transform: translateX(-2px); }
-  .rangebar .ends { display: flex; justify-content: space-between; margin-top: 9px; font-size: 12.5px; color: var(--ink-2); }
+  /* Notes / guardrails */
+  .notes { margin: 16px 0 0; display: none; }
+  .notes.on { display: block; }
+  .note {
+    display: block;
+    font-size: 12.5px; line-height: 1.45; color: var(--ink-2);
+    background: var(--surface-2); border: 1px solid var(--line);
+    border-left: 3px solid var(--blue-lt);
+    border-radius: 8px; padding: 9px 12px; margin-top: 8px;
+  }
+  .note.warn { border-left-color: var(--warm); background: #fdf7f1; border-color: #f0e0cd; }
+  .note b { color: var(--ink); font-weight: 600; }
 
   /* Metric tiles */
-  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 22px; }
-  @media (max-width: 480px) { .tiles { grid-template-columns: 1fr 1fr; } }
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+  @media (max-width: 480px) { .tiles { grid-template-columns: 1fr; } }
   .tile { background: var(--surface-2); border: 1px solid var(--line); border-radius: 11px; padding: 13px 14px; }
   .tile .t-k { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
   .tile .t-v { font-size: 19px; font-weight: 700; margin-top: 3px; }
@@ -132,14 +140,21 @@
   .mult-head { display: flex; align-items: baseline; justify-content: space-between; margin: 4px 0 2px; }
   .mult-head .lbl { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--blue); font-weight: 700; }
   .mult-head .m { font-size: 22px; font-weight: 800; color: var(--navy); }
-  .factors { margin-top: 12px; }
-  .factor { display: grid; grid-template-columns: 152px 1fr 56px; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); }
+
+  /* Multiple gauge: where this firm lands between the floor and the cap */
+  .gauge { margin: 14px 2px 18px; }
+  .gauge .track { position: relative; height: 10px; border-radius: 6px; background: linear-gradient(90deg, var(--blue-pale), var(--blue-lt), var(--blue)); }
+  .gauge .mark { position: absolute; top: -5px; width: 4px; height: 20px; border-radius: 2px; background: var(--navy); transform: translateX(-2px); transition: left .18s ease; }
+  .gauge .ends { display: flex; justify-content: space-between; margin-top: 9px; font-size: 12px; color: var(--muted); }
+
+  .factors { margin-top: 2px; }
+  .factor { display: grid; grid-template-columns: 152px 1fr 62px; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); }
   .factor:first-child { border-top: 0; }
   .factor .f-name { font-size: 13px; font-weight: 600; }
   .factor .f-name small { display: block; font-weight: 400; color: var(--muted); font-size: 11.5px; }
   .factor .f-bar { position: relative; height: 20px; }
   .factor .f-bar .axis { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--line); }
-  .factor .f-bar .fill { position: absolute; top: 4px; height: 12px; border-radius: 3px; }
+  .factor .f-bar .fill { position: absolute; top: 4px; height: 12px; border-radius: 3px; transition: width .18s ease; }
   .factor .f-bar .fill.pos { left: 50%; background: var(--blue); }
   .factor .f-bar .fill.neg { right: 50%; background: var(--warm); }
   .factor .f-bar .fill.zero { left: 50%; width: 3px !important; background: var(--muted); border-radius: 2px; }
@@ -147,7 +162,13 @@
   .factor .f-val.pos { color: var(--blue); }
   .factor .f-val.neg { color: var(--warm); }
   .factor .f-val.zero { color: var(--muted); }
-  .base-note { font-size: 12.5px; color: var(--ink-2); margin: 10px 0 0; }
+  .factor.base .f-name, .factor.base .f-val { color: var(--ink-2); font-weight: 600; }
+  .factor.off .f-name { color: var(--muted); }
+  .factor.total { border-top: 2px solid var(--ink); margin-top: 2px; padding-top: 9px; }
+  .factor.total .f-name { font-size: 13px; font-weight: 700; }
+  .factor.total .f-val { font-size: 16px; font-weight: 800; color: var(--navy); }
+  .clamp-note { font-size: 12.5px; color: var(--warm); margin: 10px 0 0; font-weight: 600; display: none; }
+  .clamp-note.on { display: block; }
 
   /* EBITDA cross-check */
   .xcheck { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
@@ -179,22 +200,25 @@
   .lead input { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.18); color: #fff; }
   .lead input::placeholder { color: #7f93b3; }
   .lead input:focus { background: rgba(255,255,255,.12); border-color: var(--blue-lt); box-shadow: 0 0 0 3px rgba(79,149,218,.25); }
+  .lead input.flag { border-color: var(--warm); box-shadow: 0 0 0 3px rgba(199,123,48,.25); }
   .lead .submit { background: #fff; color: var(--navy); border: 0; font-weight: 700; font-size: 15px; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-family: inherit; white-space: nowrap; }
   .lead .submit:hover { background: var(--blue-pale); }
-  .lead .note { margin: 12px 0 0; font-size: 12px; color: #9db0cd; }
+  .lead .note { margin: 12px 0 0; font-size: 12px; color: #9db0cd; background: none; border: 0; padding: 0; display: block; }
   .lead .ok { margin-top: 12px; font-weight: 600; color: #cfe6d8; display: none; }
-  .lead.done .form, .lead.done .note { display: none; }
+  .lead.done .form, .lead.done .disclaim { display: none; }
   .lead.done .ok { display: block; }
 
   footer.site { border-top: 1px solid var(--line); padding: 22px 0 30px; color: var(--muted); font-size: 12.5px; }
   footer.site .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
   /* Print / Save-as-PDF */
   @media print {
     body { background: #fff; }
     header.site { background: #fff; color: var(--navy); border-bottom: 2px solid var(--navy); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     header.site p.sub { color: var(--ink-2); }
-    .brand img.logo { filter: none; }
+    header.site .brand img.logo { content: none; }
     .card { box-shadow: none; break-inside: avoid; }
     .lead, .actions, footer.site { display: none !important; }
     .grid { gap: 14px; }
@@ -243,25 +267,22 @@
         <div class="field">
           <label for="advisory">Advisory (recurring) assets <span class="hint">% of AUM that is fee-based, not brokerage/commission</span></label>
           <div class="rangerow">
-            <input id="advisory" type="range" min="0" max="100" step="1" value="85" />
+            <input id="advisory" type="range" min="0" max="100" step="1" value="85" aria-describedby="advisoryVal" />
             <span class="rangeval" id="advisoryVal">85%</span>
           </div>
         </div>
       </section>
 
       <!-- RESULTS -->
-      <section class="card" aria-labelledby="results-h" aria-live="polite">
+      <section class="card" aria-labelledby="results-h">
         <h2 id="results-h">Estimated value</h2>
-        <div class="hero">
+        <div class="hero" aria-live="polite">
           <div class="k">Indicative firm value</div>
           <div class="val" id="heroVal">$—</div>
           <div class="rng">range <b id="rngLow">$—</b> to <b id="rngHigh">$—</b></div>
         </div>
 
-        <div class="rangebar">
-          <div class="track"><div class="mid" id="rngMid" style="left:50%"></div></div>
-          <div class="ends"><span id="barLow">$—</span><span id="barHigh">$—</span></div>
-        </div>
+        <div class="notes" id="notes"></div>
 
         <div class="tiles">
           <div class="tile"><div class="t-k">Avg client size</div><div class="t-v" id="mClient">$—</div><div class="t-s">AUM per household</div></div>
@@ -274,8 +295,14 @@
             <span class="lbl">Revenue multiple applied</span>
             <span class="m" id="multVal">—×</span>
           </div>
+
+          <div class="gauge">
+            <div class="track"><div class="mark" id="gaugeMark" style="left:50%"></div></div>
+            <div class="ends"><span id="gaugeLo">—×</span><span id="gaugeHi">—×</span></div>
+          </div>
+
           <div class="factors" id="factors"></div>
-          <p class="base-note">Starts from a <b id="baseM">2.7×</b> base revenue multiple, then adjusts up or down for the drivers above.</p>
+          <p class="clamp-note" id="clampNote"></p>
         </div>
 
         <div class="xcheck">
@@ -285,7 +312,7 @@
           </div>
           <div class="row" style="margin-top:8px;">
             <span class="marginctl">Assumed EBITDA margin
-              <input id="margin" type="range" min="15" max="45" step="1" value="35" />
+              <input id="margin" type="range" min="15" max="45" step="1" value="35" aria-describedby="marginVal" />
               <b id="marginVal" style="color:var(--ink);min-width:34px;">35%</b>
             </span>
             <span style="font-size:12.5px;color:var(--ink-2);">on <span id="ebitdaAbs">$—</span> normalized EBITDA</span>
@@ -309,6 +336,7 @@
         <li><b>Average client size</b> (AUM ÷ households) rewards larger, stickier, more scalable relationships.</li>
         <li><b>Average realized fee</b> (revenue ÷ AUM) rewards a healthy fee band and flags both underpricing and fee-pressure risk.</li>
         <li><b>Scale</b> (total AUM) reflects the premium larger firms attract from acquirers and capital partners.</li>
+        <li><b>Each driver moves smoothly.</b> Adjustments interpolate between the set points, so a firm at 87% recurring lands between the 80% and 90% marks rather than jumping at a threshold.</li>
       </ul>
       <div class="disc"><b>For estimate only.</b> This tool returns an indicative range based on the figures entered and standard market multiples. An actual valuation depends on growth, client demographics, margin, revenue concentration, and other factors, and may differ materially. It is not an offer, appraisal, or advice.</div>
     </section>
@@ -323,8 +351,8 @@
         <div><label for="lf_firm">Firm</label><input id="lf_firm" type="text" placeholder="Your RIA" autocomplete="organization" /></div>
         <button class="submit" type="submit">Request valuation</button>
       </form>
-      <p class="note">By requesting, you agree a Booth advisor may contact you. We never share your information.</p>
-      <p class="ok" id="leadOk">Thanks — a Booth advisor will be in touch shortly.</p>
+      <p class="note disclaim">By requesting, you agree a Booth advisor may contact you. We never share your information.</p>
+      <p class="ok" id="leadOk">Thanks, a Booth advisor will be in touch shortly.</p>
     </section>
   </main>
 
@@ -339,8 +367,12 @@
 /* ============================================================================
    RIA VALUATION MODEL  —  tune everything here.
    Andrew: this is the whole methodology. Change numbers in CONFIG and the page
-   updates. Base multiple + four adjustment tables. Each table is a list of
-   [threshold, adjustment-to-the-multiple], read top to bottom, first match wins.
+   updates. Base multiple + four adjustment tables.
+
+   Each table is a list of [set point, adjustment-to-the-multiple], highest
+   first. A firm landing BETWEEN two set points gets a blended adjustment, so
+   the number moves smoothly instead of jumping at a threshold. Add or remove
+   set points freely; more points = a more precisely shaped curve.
    ========================================================================== */
 const CONFIG = {
   baseMultiple: 2.7,     // base revenue multiple (Carson-style midpoint)
@@ -358,13 +390,16 @@ const CONFIG = {
     [2_000_000, +0.40], [1_000_000, +0.20], [500_000, 0.0], [250_000, -0.20], [0, -0.40]
   ],
   // average realized fee (revenue / AUM), as a fraction  ->  adjustment
-  // healthy band earns a premium; outside it, flat or a small discount
+  // 0.8%-1.2% is the healthy band and earns the full premium; the adjustment
+  // tapers off on both sides (fee pressure above, underpricing below)
   fee: [
-    [0.015, -0.20],  // >1.5% : fee-pressure / concentration risk
-    [0.012, 0.0],    // 1.2%-1.5%
-    [0.008, +0.20],  // 0.8%-1.2% : healthy band
-    [0.006, 0.0],    // 0.6%-0.8%
-    [0.0,   -0.20]   // <0.6% : underpriced
+    [0.020, -0.20],  // 2.0%+   : fee-pressure / concentration risk
+    [0.014,  0.00],
+    [0.012, +0.20],  // 1.2%    : top of the healthy band
+    [0.008, +0.20],  // 0.8%    : bottom of the healthy band
+    [0.006,  0.00],
+    [0.004, -0.20],  // 0.4%-   : underpriced
+    [0.000, -0.20]
   ],
   // total AUM, in $  ->  scale adjustment
   scale: [
@@ -386,124 +421,235 @@ const LEAD = {
 
 /* ---------- helpers ---------- */
 const $ = id => document.getElementById(id);
-function pickAsc(tbl, v){ for (const [t,a] of tbl){ if (v >= t) return a; } return tbl[tbl.length-1][1]; }
-function pickFee(tbl, v){ for (const [t,a] of tbl){ if (v >= t) return a; } return tbl[tbl.length-1][1]; }
 function clamp(x,lo,hi){ return Math.max(lo, Math.min(hi, x)); }
-function num(s){ const n = parseFloat(String(s).replace(/[^0-9.]/g,'')); return isFinite(n) ? n : 0; }
+
+/* Empty / unusable input returns null (NOT 0), so a blank box is treated as
+   "not provided" and scores neutral, instead of silently scoring worst-case. */
+function num(s){
+  const t = String(s).replace(/[^0-9.]/g,'');
+  if (!t) return null;
+  const n = parseFloat(t);
+  return isFinite(n) ? n : null;
+}
+
+/* Blend between the two set points that bracket the value. No cliffs. */
+function curve(tbl, v){
+  if (v >= tbl[0][0]) return tbl[0][1];
+  const last = tbl[tbl.length-1];
+  if (v <= last[0]) return last[1];
+  for (let i = 0; i < tbl.length - 1; i++){
+    const [hiT, hiA] = tbl[i], [loT, loA] = tbl[i+1];
+    if (v <= hiT && v >= loT){
+      const span = hiT - loT;
+      const t = span > 0 ? (v - loT) / span : 1;
+      return loA + (hiA - loA) * t;
+    }
+  }
+  return last[1];
+}
+/* null / missing input -> neutral 0, never a penalty */
+function adjust(tbl, v){ return (v === null || !isFinite(v)) ? 0 : curve(tbl, v); }
 
 function money(n){
-  if (!isFinite(n) || n <= 0) return '$0';
+  if (n === null || !isFinite(n) || n <= 0) return '$0';
   if (n >= 1e9) return '$' + (n/1e9).toFixed(n>=1e10?1:2).replace(/\.0+$/,'') + 'B';
   if (n >= 1e6) return '$' + (n/1e6).toFixed(n>=1e8?1:2).replace(/\.0+$/,'') + 'M';
   if (n >= 1e3) return '$' + Math.round(n/1e3) + 'K';
   return '$' + Math.round(n).toLocaleString();
 }
-function moneyFull(n){ return '$' + Math.round(n).toLocaleString(); }
-function fmtInput(s){ const n = num(s); return n ? n.toLocaleString() : ''; }
+function fmtInput(s){ const n = num(s); return n === null ? '' : n.toLocaleString(); }
 
-/* ---------- factor bar rendering ---------- */
-const MAXADJ = 0.60; // widest bar corresponds to this adjustment magnitude
-function factorRow(name, sub, adj){
-  const cls = adj > 0 ? 'pos' : adj < 0 ? 'neg' : 'zero';
+/* widest factor bar tracks the largest adjustment actually in CONFIG, so the
+   bars stay proportional if the tables are retuned */
+const MAXADJ = Math.max(0.01, ...[CONFIG.recurring, CONFIG.clientSize, CONFIG.fee, CONFIG.scale]
+  .flat().map(p => Math.abs(p[1])));
+
+/* ---------- factor row rendering ---------- */
+function factorRow(name, sub, adj, on){
+  const cls = !on ? 'zero' : adj > 0.005 ? 'pos' : adj < -0.005 ? 'neg' : 'zero';
   const pct = Math.min(50, Math.abs(adj)/MAXADJ * 50);
-  const sign = adj > 0 ? '+' : adj < 0 ? '' : '';
   let bar;
-  if (adj === 0) bar = '<div class="fill zero"></div>';
+  if (!on || Math.abs(adj) < 0.005) bar = '<div class="fill zero"></div>';
   else if (adj > 0) bar = `<div class="fill pos" style="width:${pct}%"></div>`;
   else bar = `<div class="fill neg" style="width:${pct}%"></div>`;
-  return `<div class="factor">
+  const val = !on ? '—' : (adj > 0 ? '+' : '') + adj.toFixed(2);
+  return `<div class="factor${on ? '' : ' off'}">
     <div class="f-name">${name}<small>${sub}</small></div>
     <div class="f-bar"><div class="axis"></div>${bar}</div>
-    <div class="f-val ${cls}">${sign}${adj.toFixed(2)}</div>
+    <div class="f-val ${cls}">${val}</div>
   </div>`;
 }
 
 /* ---------- main calc ---------- */
 function calc(){
-  const aum = num($('aum').value);
-  const rev = num($('rev').value);
-  const clients = Math.max(0, Math.round(num($('clients').value)));
-  const advisory = num($('advisory').value); // 0-100
-  const margin = num($('margin').value) / 100;
+  const aum      = num($('aum').value);
+  const rev      = num($('rev').value);
+  const clientsR = num($('clients').value);
+  const advisory = num($('advisory').value) ?? 0;   // slider, always present
+  const margin   = (num($('margin').value) ?? 35) / 100;
 
-  const avgClient = clients > 0 ? aum / clients : 0;
-  const avgFee = aum > 0 ? rev / aum : 0;
+  const hasAum     = aum !== null && aum > 0;
+  const hasRev     = rev !== null && rev > 0;
+  const clients    = clientsR !== null ? Math.round(clientsR) : null;
+  const hasClients = clients !== null && clients > 0;
 
-  const aRec = pickAsc(CONFIG.recurring, advisory);
-  const aClient = pickAsc(CONFIG.clientSize, avgClient);
-  const aFee = pickFee(CONFIG.fee, avgFee);
-  const aScale = pickAsc(CONFIG.scale, aum);
+  const avgClient = (hasAum && hasClients) ? aum / clients : null;
+  const avgFee    = (hasAum && hasRev)     ? rev / aum     : null;
 
-  const multiple = clamp(CONFIG.baseMultiple + aRec + aClient + aFee + aScale, CONFIG.floor, CONFIG.cap);
-  const value = rev * multiple;
-  const low = value * (1 - CONFIG.rangeSpread);
-  const high = value * (1 + CONFIG.rangeSpread);
+  const aRec    = curve(CONFIG.recurring, advisory);
+  const aClient = adjust(CONFIG.clientSize, avgClient);
+  const aFee    = adjust(CONFIG.fee, avgFee);
+  const aScale  = hasAum ? curve(CONFIG.scale, aum) : 0;
 
-  const ebitda = rev * margin;
-  const evEbitda = ebitda > 0 ? value / ebitda : 0;
+  const raw      = CONFIG.baseMultiple + aRec + aClient + aFee + aScale;
+  const multiple = clamp(raw, CONFIG.floor, CONFIG.cap);
+  const clamped  = Math.abs(raw - multiple) > 0.005;
 
-  /* render */
-  $('heroVal').textContent = value > 0 ? money(value) : '$—';
-  $('rngLow').textContent = money(low);
-  $('rngHigh').textContent = money(high);
-  $('barLow').textContent = money(low);
-  $('barHigh').textContent = money(high);
+  const value = hasRev ? rev * multiple : null;
+  const low   = value === null ? null : value * (1 - CONFIG.rangeSpread);
+  const high  = value === null ? null : value * (1 + CONFIG.rangeSpread);
 
-  $('mClient').textContent = avgClient > 0 ? money(avgClient) : '$—';
-  $('mFee').textContent = avgFee > 0 ? (avgFee*100).toFixed(2) + '%' : '—%';
-  $('mRec').textContent = advisory.toFixed(0) + '%';
+  const ebitda   = hasRev ? rev * margin : null;
+  const evEbitda = (value !== null && ebitda > 0) ? value / ebitda : null;
 
+  /* ---- headline ---- */
+  $('heroVal').textContent = value === null ? '$—' : money(value);
+  $('rngLow').textContent  = low  === null ? '$—' : money(low);
+  $('rngHigh').textContent = high === null ? '$—' : money(high);
+
+  /* ---- tiles ---- */
+  $('mClient').textContent = avgClient === null ? '$—' : money(avgClient);
+  $('mFee').textContent    = avgFee    === null ? '—%' : (avgFee*100).toFixed(2) + '%';
+  $('mRec').textContent    = advisory.toFixed(0) + '%';
+
+  /* ---- multiple + gauge ---- */
   $('multVal').textContent = multiple.toFixed(2) + '×';
-  $('baseM').textContent = CONFIG.baseMultiple.toFixed(1) + '×';
+  $('gaugeLo').textContent = CONFIG.floor.toFixed(1) + '×';
+  $('gaugeHi').textContent = CONFIG.cap.toFixed(1) + '×';
+  const span = CONFIG.cap - CONFIG.floor;
+  $('gaugeMark').style.left =
+    (span > 0 ? clamp((multiple - CONFIG.floor)/span, 0, 1) * 100 : 50).toFixed(1) + '%';
 
+  /* ---- factor audit trail: base + adjustments = applied multiple ---- */
   $('factors').innerHTML =
-    factorRow('Recurring share', advisory.toFixed(0)+'% advisory', aRec) +
-    factorRow('Client size', 'avg ' + money(avgClient), aClient) +
-    factorRow('Realized fee', (avgFee*100).toFixed(2)+'% of AUM', aFee) +
-    factorRow('Scale', money(aum) + ' AUM', aScale);
+    `<div class="factor base">
+       <div class="f-name">Base multiple<small>starting point</small></div>
+       <div class="f-bar"><div class="axis"></div></div>
+       <div class="f-val">${CONFIG.baseMultiple.toFixed(2)}</div>
+     </div>` +
+    factorRow('Recurring share', advisory.toFixed(0)+'% advisory', aRec, true) +
+    factorRow('Client size', avgClient === null ? 'not provided' : 'avg ' + money(avgClient), aClient, avgClient !== null) +
+    factorRow('Realized fee', avgFee === null ? 'not provided' : (avgFee*100).toFixed(2)+'% of AUM', aFee, avgFee !== null) +
+    factorRow('Scale', hasAum ? money(aum) + ' AUM' : 'not provided', aScale, hasAum) +
+    `<div class="factor total">
+       <div class="f-name">Applied multiple</div>
+       <div class="f-bar"></div>
+       <div class="f-val">${multiple.toFixed(2)}×</div>
+     </div>`;
 
-  $('ebitdaMult').textContent = evEbitda > 0 ? evEbitda.toFixed(1) + '× EV/EBITDA' : '—×';
-  $('ebitdaAbs').textContent = money(ebitda);
+  /* never let the factor list disagree with the headline multiple */
+  const cn = $('clampNote');
+  if (clamped){
+    cn.textContent = `Adds to ${raw.toFixed(2)}×, held at the ${raw > multiple ? 'cap' : 'floor'} of ${multiple.toFixed(2)}×.`;
+    cn.classList.add('on');
+  } else cn.classList.remove('on');
 
-  $('rngMid').style.left = '50%';
+  /* ---- EBITDA cross-check ---- */
+  $('ebitdaMult').textContent = evEbitda === null ? '—×' : evEbitda.toFixed(1) + '× EV/EBITDA';
+  $('ebitdaAbs').textContent  = ebitda === null ? '$—' : money(ebitda);
+
+  /* ---- guardrails: say what is missing or odd, never fail silently ---- */
+  const notes = [];
+  const missing = [];
+  if (!hasRev)     missing.push('annual gross revenue');
+  if (!hasAum)     missing.push('AUM');
+  if (!hasClients) missing.push('client households');
+
+  if (!hasRev) {
+    notes.push(['', 'Enter <b>annual gross revenue</b> to see a value. The multiple applies to revenue.']);
+  }
+  if (missing.length && hasRev) {
+    notes.push(['', `Add ${missing.map(m=>'<b>'+m+'</b>').join(' and ')} for a fuller picture. Until then those drivers score <b>neutral</b>, no premium and no discount.`]);
+  }
+  if (hasAum && hasRev && rev > aum) {
+    notes.push(['warn', 'Revenue is larger than AUM. Check that both figures are in dollars.']);
+  } else if (avgFee !== null && avgFee > 0.03) {
+    notes.push(['warn', `That works out to a <b>${(avgFee*100).toFixed(1)}%</b> realized fee, well above a typical advisory book. Worth a second look.`]);
+  } else if (avgFee !== null && avgFee > 0 && avgFee < 0.002) {
+    notes.push(['warn', `That works out to a <b>${(avgFee*100).toFixed(2)}%</b> realized fee, unusually low for an advisory book. Worth a second look.`]);
+  }
+  if (hasClients && clients > 0 && avgClient !== null && avgClient < 25_000) {
+    notes.push(['warn', `Average client is <b>${money(avgClient)}</b>. Check the household count.`]);
+  }
+
+  const box = $('notes');
+  box.innerHTML = notes.map(([k,t]) => `<div class="note ${k}">${t}</div>`).join('');
+  box.classList.toggle('on', notes.length > 0);
+
+  $('aum').classList.toggle('flag', hasAum && hasRev && rev > aum);
+  $('rev').classList.toggle('flag', hasAum && hasRev && rev > aum);
 }
 
 /* ---------- wiring ---------- */
+/* keep the caret where the user is typing, even mid-number, as digits regroup */
+function digitsBefore(str, pos){
+  let c = 0;
+  for (let i = 0; i < pos; i++) if (str[i] >= '0' && str[i] <= '9') c++;
+  return c;
+}
+function posAfterDigits(str, n){
+  if (n <= 0) return 0;
+  let c = 0;
+  for (let i = 0; i < str.length; i++){
+    if (str[i] >= '0' && str[i] <= '9'){ c++; if (c === n) return i + 1; }
+  }
+  return str.length;
+}
 ['aum','rev','clients'].forEach(id => {
   const el = $(id);
   el.addEventListener('input', () => {
-    const caretEnd = el.selectionStart === el.value.length;
-    el.value = fmtInput(el.value);
-    if (caretEnd) el.setSelectionRange(el.value.length, el.value.length);
+    const before = el.value;
+    const d = digitsBefore(before, el.selectionStart ?? before.length);
+    const after = fmtInput(before);
+    if (after !== before){
+      el.value = after;
+      const p = posAfterDigits(after, d);
+      try { el.setSelectionRange(p, p); } catch (e) {}
+    }
     calc();
   });
 });
 $('advisory').addEventListener('input', e => { $('advisoryVal').textContent = e.target.value + '%'; calc(); });
 $('margin').addEventListener('input', e => { $('marginVal').textContent = e.target.value + '%'; calc(); });
-$('margin').value = Math.round(CONFIG.defaultMargin * 100); $('marginVal').textContent = $('margin').value + '%';
+$('margin').value = Math.round(CONFIG.defaultMargin * 100);
+$('marginVal').textContent = $('margin').value + '%';
 $('printBtn').addEventListener('click', () => window.print());
 
 /* ---------- lead form ---------- */
 $('leadForm').addEventListener('submit', e => {
   e.preventDefault();
-  const name = $('lf_name').value.trim();
+  const name  = $('lf_name').value.trim();
   const email = $('lf_email').value.trim();
-  const firm = $('lf_firm').value.trim();
-  if (!name || !/.+@.+\..+/.test(email)) {
-    if (!name) $('lf_name').focus(); else $('lf_email').focus();
-    return;
-  }
-  const est = $('heroVal').textContent;
-  const payload = { name, email, firm, indicative_value: est, mult: $('multVal').textContent };
+  const firm  = $('lf_firm').value.trim();
+  const okName = !!name, okMail = /.+@.+\..+/.test(email);
+  $('lf_name').classList.toggle('flag', !okName);
+  $('lf_email').classList.toggle('flag', !okMail);
+  if (!okName || !okMail){ (!okName ? $('lf_name') : $('lf_email')).focus(); return; }
+
+  const payload = {
+    name, email, firm,
+    indicative_value: $('heroVal').textContent,
+    mult: $('multVal').textContent
+  };
 
   if (LEAD.endpoint) {
     fetch(LEAD.endpoint, { method:'POST', mode:'no-cors',
       headers:{'Content-Type':'application/x-www-form-urlencoded'},
       body:new URLSearchParams(payload).toString() }).catch(()=>{});
   } else if (LEAD.email) {
-    const sub = encodeURIComponent('RIA valuation request — ' + (firm || name));
+    const sub  = encodeURIComponent('RIA valuation request — ' + (firm || name));
     const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\nFirm: ${firm}\nIndicative value: ${est} (${payload.mult})`);
+      `Name: ${name}\nEmail: ${email}\nFirm: ${firm}\nIndicative value: ${payload.indicative_value} (${payload.mult})`);
     window.location.href = `mailto:${LEAD.email}?subject=${sub}&body=${body}`;
   } else {
     console.log('Lead (not delivered — set LEAD.endpoint or LEAD.email):', payload);
