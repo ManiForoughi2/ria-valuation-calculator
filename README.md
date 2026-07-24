@@ -6,7 +6,8 @@ few numbers and gets an indicative firm value, the multiple behind it, the facto
 moving it, and an EBITDA cross-check.
 
 It is one file (`index.html`), no build step, no dependencies, nothing sent anywhere.
-Open it in a browser or host it as a static page.
+Open it in a browser or host it as a static page. Booth branding (logo, favicon,
+share preview) and a "Get a real valuation" lead form are built in.
 
 ## Run it locally
 
@@ -30,6 +31,22 @@ the numbers and the page updates, no other edits needed.
 - `rangeSpread` — the ± band around the point estimate.
 
 This is where Booth's own valuation analytics plug in.
+
+## Collect leads (optional)
+
+The "Get a real valuation" form works out of the box (it shows a thank-you). To
+actually receive submissions, open the `LEAD` block just below `CONFIG` and set one:
+
+- `endpoint` — a form URL (Google Form `formResponse`, Formspree, or your own handler).
+- `email` — an address; submitting opens the visitor's email app pre-filled.
+
+Leave both blank and nothing is sent anywhere.
+
+## Save as PDF
+
+The results card has a **Save as PDF** button (print stylesheet included), so a
+principal can keep or share the estimate. Inputs, results, and methodology print
+clean; the lead form and footer are hidden.
 
 ## Inputs
 

@@ -4,7 +4,19 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>RIA Firm Valuation Calculator | Booth &amp; Company</title>
-<meta name="description" content="Estimate the value of your RIA. Enter a few numbers and see an indicative valuation range, the multiple applied, and the factors driving it." />
+<meta name="description" content="What is your RIA worth? Enter a few numbers and see an indicative valuation range, the revenue multiple applied, and the factors driving your firm's value." />
+<link rel="icon" type="image/png" href="favicon.png" />
+<link rel="apple-touch-icon" href="favicon.png" />
+<!-- Share preview (Slack / LinkedIn / iMessage) -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="What is your RIA worth? | Booth &amp; Company" />
+<meta property="og:description" content="Enter a few numbers, see an indicative value range, the multiple behind it, and the factors moving your number." />
+<meta property="og:image" content="https://maniforoughi2.github.io/ria-valuation-calculator/og.png" />
+<meta property="og:url" content="https://maniforoughi2.github.io/ria-valuation-calculator/" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="What is your RIA worth? | Booth &amp; Company" />
+<meta name="twitter:description" content="Indicative RIA firm valuation in a few numbers, from Booth &amp; Company." />
+<meta name="twitter:image" content="https://maniforoughi2.github.io/ria-valuation-calculator/og.png" />
 <style>
   :root {
     --navy: #001844;
@@ -39,25 +51,18 @@
   header.site {
     background: var(--navy);
     color: #fff;
-    padding: 20px 0 22px;
+    padding: 22px 0 24px;
   }
-  .brand { display: flex; align-items: center; gap: 12px; }
-  .brand .mark {
-    width: 34px; height: 34px; border-radius: 7px;
-    background: #fff; color: var(--navy);
-    display: grid; place-items: center;
-    font-weight: 800; font-size: 15px; letter-spacing: .5px;
-  }
-  .brand .name { font-weight: 700; letter-spacing: .14em; font-size: 13px; text-transform: uppercase; }
-  .brand .name span { opacity: .62; }
+  .brand { display: flex; align-items: center; }
+  .brand img.logo { height: 46px; width: auto; display: block; }
   header.site h1 {
     margin: 20px 0 6px; font-size: clamp(26px, 4.2vw, 40px);
     font-weight: 700; letter-spacing: -.01em; line-height: 1.1;
   }
-  header.site p.sub { margin: 0; max-width: 640px; color: #c6d3e6; font-size: 16px; }
+  header.site p.sub { margin: 0; max-width: 660px; color: #c6d3e6; font-size: 16px; }
 
   /* Layout */
-  .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 22px; margin: 26px 0 40px; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 22px; margin: 26px 0 22px; }
   @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
 
   .card {
@@ -82,7 +87,7 @@
   }
   .inputwrap .prefix { left: 14px; }
   .inputwrap .suffix { right: 14px; }
-  input[type="text"], input[type="number"] {
+  input[type="text"], input[type="number"], input[type="email"] {
     width: 100%; padding: 12px 14px; font-size: 16px; font-family: inherit;
     color: var(--ink); background: var(--surface-2);
     border: 1px solid var(--line); border-radius: 10px; outline: none;
@@ -151,6 +156,11 @@
   .xcheck .marginctl { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-2); }
   .xcheck .marginctl input[type="range"] { width: 120px; }
 
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+  .btn { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); text-decoration: none; font-weight: 600; font-size: 13.5px; padding: 10px 15px; border-radius: 10px; cursor: pointer; font-family: inherit; }
+  .btn:hover { border-color: var(--blue-lt); }
+  .btn.primary { background: var(--navy); color: #fff; border-color: var(--navy); }
+
   /* Methodology */
   .method { margin-top: 6px; }
   .method h2 { color: var(--blue); }
@@ -158,23 +168,45 @@
   .method li { margin-bottom: 7px; }
   .method .disc { margin-top: 16px; padding: 14px 16px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; color: var(--ink-2); font-size: 12.5px; }
 
+  /* Lead capture */
+  .lead { margin-top: 22px; background: var(--navy); color: #fff; border: 0; }
+  .lead h2 { color: var(--blue-pale); }
+  .lead p.lede { color: #c6d3e6; }
+  .lead .form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: end; margin-top: 6px; }
+  @media (max-width: 760px) { .lead .form { grid-template-columns: 1fr; } }
+  .lead label { display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 6px; color: #dbe6f5; }
+  .lead label .req { color: var(--blue-pale); }
+  .lead input { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.18); color: #fff; }
+  .lead input::placeholder { color: #7f93b3; }
+  .lead input:focus { background: rgba(255,255,255,.12); border-color: var(--blue-lt); box-shadow: 0 0 0 3px rgba(79,149,218,.25); }
+  .lead .submit { background: #fff; color: var(--navy); border: 0; font-weight: 700; font-size: 15px; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-family: inherit; white-space: nowrap; }
+  .lead .submit:hover { background: var(--blue-pale); }
+  .lead .note { margin: 12px 0 0; font-size: 12px; color: #9db0cd; }
+  .lead .ok { margin-top: 12px; font-weight: 600; color: #cfe6d8; display: none; }
+  .lead.done .form, .lead.done .note { display: none; }
+  .lead.done .ok { display: block; }
+
   footer.site { border-top: 1px solid var(--line); padding: 22px 0 30px; color: var(--muted); font-size: 12.5px; }
   footer.site .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-  .cta {
-    display: inline-block; margin-top: 4px; background: var(--navy); color: #fff;
-    text-decoration: none; font-weight: 600; font-size: 14px; padding: 11px 18px; border-radius: 10px;
+
+  /* Print / Save-as-PDF */
+  @media print {
+    body { background: #fff; }
+    header.site { background: #fff; color: var(--navy); border-bottom: 2px solid var(--navy); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    header.site p.sub { color: var(--ink-2); }
+    .brand img.logo { filter: none; }
+    .card { box-shadow: none; break-inside: avoid; }
+    .lead, .actions, footer.site { display: none !important; }
+    .grid { gap: 14px; }
   }
 </style>
 </head>
 <body data-palette="#215F9A,#C77B30">
   <header class="site">
     <div class="wrap">
-      <div class="brand">
-        <div class="mark">BC</div>
-        <div class="name">Booth <span>&amp;</span> Company</div>
-      </div>
+      <div class="brand"><img class="logo" src="booth_logo_white.png" alt="Booth &amp; Company" /></div>
       <h1>What is your RIA worth?</h1>
-      <p class="sub">Your firm is one of your largest assets. Enter a few numbers to see an indicative valuation range, the multiple behind it, and the factors moving your number, whether you are planning to grow, take on a partner, or one day sell.</p>
+      <p class="sub">Your business is one of your largest assets. Enter a few numbers to see an indicative valuation range, the multiple behind it, and the factors moving your number, whether you are planning to grow, take on a partner, or one day sell.</p>
     </div>
   </header>
 
@@ -259,6 +291,11 @@
             <span style="font-size:12.5px;color:var(--ink-2);">on <span id="ebitdaAbs">$—</span> normalized EBITDA</span>
           </div>
         </div>
+
+        <div class="actions">
+          <button class="btn primary" id="printBtn" type="button">Save as PDF</button>
+          <a class="btn" href="#talk">Talk to Booth</a>
+        </div>
       </section>
     </div>
 
@@ -274,6 +311,20 @@
         <li><b>Scale</b> (total AUM) reflects the premium larger firms attract from acquirers and capital partners.</li>
       </ul>
       <div class="disc"><b>For estimate only.</b> This tool returns an indicative range based on the figures entered and standard market multiples. An actual valuation depends on growth, client demographics, margin, revenue concentration, and other factors, and may differ materially. It is not an offer, appraisal, or advice.</div>
+    </section>
+
+    <!-- LEAD CAPTURE -->
+    <section class="card lead" id="talk">
+      <h2>Get a real valuation</h2>
+      <p class="lede">This is a directional estimate. Booth &amp; Company builds a full, defensible valuation on your actual numbers. Tell us where to send it.</p>
+      <form class="form" id="leadForm" novalidate>
+        <div><label for="lf_name">First name <span class="req">*</span></label><input id="lf_name" type="text" placeholder="Jane" autocomplete="given-name" required /></div>
+        <div><label for="lf_email">Email <span class="req">*</span></label><input id="lf_email" type="email" placeholder="jane@yourfirm.com" autocomplete="email" required /></div>
+        <div><label for="lf_firm">Firm</label><input id="lf_firm" type="text" placeholder="Your RIA" autocomplete="organization" /></div>
+        <button class="submit" type="submit">Request valuation</button>
+      </form>
+      <p class="note">By requesting, you agree a Booth advisor may contact you. We never share your information.</p>
+      <p class="ok" id="leadOk">Thanks — a Booth advisor will be in touch shortly.</p>
     </section>
   </main>
 
@@ -319,6 +370,18 @@ const CONFIG = {
   scale: [
     [1_000_000_000, +0.50], [500_000_000, +0.30], [250_000_000, +0.10], [100_000_000, 0.0], [0, -0.20]
   ]
+};
+
+/* ============================================================================
+   LEAD DELIVERY  —  where "Request valuation" submissions go.
+   Leave both blank and the form just shows a thank-you (nothing is sent).
+   To collect for real, set ONE of these:
+     endpoint : paste a form URL (e.g. a Google Form / Formspree / your handler)
+     email    : paste an address; submitting opens the visitor's email pre-filled
+   ========================================================================== */
+const LEAD = {
+  endpoint: "",   // e.g. "https://formspree.io/f/xxxx"  or a Google Form formResponse URL
+  email: ""       // e.g. "info@booth-co.com"
 };
 
 /* ---------- helpers ---------- */
@@ -402,8 +465,7 @@ function calc(){
   $('ebitdaMult').textContent = evEbitda > 0 ? evEbitda.toFixed(1) + '× EV/EBITDA' : '—×';
   $('ebitdaAbs').textContent = money(ebitda);
 
-  const midPct = 50;
-  $('rngMid').style.left = midPct + '%';
+  $('rngMid').style.left = '50%';
 }
 
 /* ---------- wiring ---------- */
@@ -418,6 +480,36 @@ function calc(){
 });
 $('advisory').addEventListener('input', e => { $('advisoryVal').textContent = e.target.value + '%'; calc(); });
 $('margin').addEventListener('input', e => { $('marginVal').textContent = e.target.value + '%'; calc(); });
+$('margin').value = Math.round(CONFIG.defaultMargin * 100); $('marginVal').textContent = $('margin').value + '%';
+$('printBtn').addEventListener('click', () => window.print());
+
+/* ---------- lead form ---------- */
+$('leadForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const name = $('lf_name').value.trim();
+  const email = $('lf_email').value.trim();
+  const firm = $('lf_firm').value.trim();
+  if (!name || !/.+@.+\..+/.test(email)) {
+    if (!name) $('lf_name').focus(); else $('lf_email').focus();
+    return;
+  }
+  const est = $('heroVal').textContent;
+  const payload = { name, email, firm, indicative_value: est, mult: $('multVal').textContent };
+
+  if (LEAD.endpoint) {
+    fetch(LEAD.endpoint, { method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams(payload).toString() }).catch(()=>{});
+  } else if (LEAD.email) {
+    const sub = encodeURIComponent('RIA valuation request — ' + (firm || name));
+    const body = encodeURIComponent(
+      `Name: ${name}\nEmail: ${email}\nFirm: ${firm}\nIndicative value: ${est} (${payload.mult})`);
+    window.location.href = `mailto:${LEAD.email}?subject=${sub}&body=${body}`;
+  } else {
+    console.log('Lead (not delivered — set LEAD.endpoint or LEAD.email):', payload);
+  }
+  $('talk').classList.add('done');
+});
 
 calc();
 </script>
